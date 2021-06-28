@@ -123,7 +123,8 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("dmenu_run") },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_b,      spawn,          SHCMD("$BROWSER") },
+	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 	STACKKEYS(MODKEY,                          focusstack)
 	STACKKEYS(MODKEY|ShiftMask,                pushstack)
 	{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
@@ -166,8 +167,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
 	/* power-ish */
-	{ MODKEY|ShiftMask,             XK_r,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("killall X") },
+	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("sysact -p \"Quit?\" dwmq") },         /* quit dwm */
+	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("sysact -p \"Reload?\" dwmr") },       /* reload dwm (SIGHUP) */
+	{ MODKEY|Mod1Mask|ShiftMask,    XK_q,      spawn,          SHCMD("sysact -p \"Shutdown?\" shutdown") }, /* shutdown */
+	{ MODKEY|Mod1Mask|ShiftMask,    XK_r,      spawn,          SHCMD("sysact -p \"Reboot?\" reboot") },     /* reboot */
 };
 
 /* button definitions */
