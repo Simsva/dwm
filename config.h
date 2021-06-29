@@ -167,6 +167,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
 	/* power-ish */
+	{ MODKEY,                       XK_Escape, spawn,          SHCMD("sysact") },                           /* run sysact */
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("sysact -p \"Quit?\" dwmq") },         /* quit dwm */
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("sysact -p \"Reload?\" dwmr") },       /* reload dwm (SIGHUP) */
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_q,      spawn,          SHCMD("sysact -p \"Shutdown?\" shutdown") }, /* shutdown */
@@ -186,11 +187,13 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
 	{ ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
 #endif /* __OpenBSD */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[0]} },
+	{ ClkStatusText,        ShiftMask,      Button3,        spawn,          SHCMD(TERMINAL " -e \"$EDITOR\" ~/.local/src/dwmblocks/blocks.h") },
+	{ ClkWinTitle,          ShiftMask,      Button3,        spawn,          SHCMD(TERMINAL " -e \"$EDITOR\" ~/.local/src/dwm/config.h") },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
-	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
+	{ ClkClientWin,         MODKEY,         Button2,        defaultgaps,    {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button4,        incrgaps,       {.i = +1} },
+	{ ClkClientWin,         MODKEY,         Button5,        incrgaps,       {.i = -1} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
