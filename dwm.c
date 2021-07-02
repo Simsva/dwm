@@ -255,6 +255,7 @@ static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglefullscr(const Arg *arg);
 static void togglesticky(const Arg *arg);
+static void toggleswallow(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -1980,6 +1981,23 @@ togglesticky(const Arg *arg)
 	arrange(selmon);
 }
 
+/* work in progress */
+/*void
+toggleswallow(const Arg *arg)
+{
+	Client *sel = selmon->sel, *term = NULL;
+
+	if(!sel)
+		return;
+	else if(sel->swallowing) {
+		unswallow(sel);
+	} else {
+		term = termforwin(sel);
+		if(term)
+			swallow(term, sel);
+	}
+}*/
+
 void
 toggletag(const Arg *arg)
 {
@@ -2269,7 +2287,8 @@ updatestatus(void)
 		strcpy(stext, "dwm-"VERSION);
 	else
 		copyvalidchars(stext, rawstext);
-	drawbar(selmon);
+	//drawbar(selmon);
+	drawbars(); /* update status bar on all monitors */
 }
 
 void
