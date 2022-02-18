@@ -47,5 +47,9 @@ install: all
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
+ccls:
+	@echo "clang\n" > .ccls
+	@echo "%c ${CFLAGS}\n" >> .ccls
+	@echo "${INCS} ${LIBS}" | sed "s/ /\n/g" >> .ccls
 
-.PHONY: all options clean dist install uninstall
+.PHONY: all options clean dist install uninstall ccls

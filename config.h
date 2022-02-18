@@ -4,6 +4,8 @@
 #define TERMINAL "st"
 #define TERMCLASS "St"
 
+#define GUI_EDITOR
+
 /* appearance */
 static unsigned int gappih       = 10;       /* horiz inner gap between windows */
 static unsigned int gappiv       = 10;       /* vert inner gap between windows */
@@ -16,7 +18,7 @@ static unsigned int snap         = 32;       /* snap pixel */
 static const int swallowfloating = 0;        /* 1 means swallow floating windows by default */
 static int showbar               = 1;        /* 0 means no bar */
 static int topbar                = 1;        /* 0 means bottom bar */
-static const char *fonts[] = { 
+static const char *fonts[] = {
 	"monospace:size=10",
 	"emoji:pixelsize=10:antialias=true:autohint=true",
 };
@@ -40,11 +42,14 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class        instance    title            tags mask     isfloating   isterminal     noswallow       monitor */
-	{ "Gimp",       NULL,       NULL,            1 << 8,       1,           0,             0,              -1 },
-	{ "Firefox",    NULL,       NULL,            1 << 2,       0,           0,             0,              -1 },
-	{ TERMCLASS,    NULL,       NULL,            0,            0,           1,             0,              -1 },
-	{ NULL,         NULL,       "Event Tester",  0,            0,           0,             1,              -1 }, /* xev */
+	/* class        instance    title                                  tags mask     isfloating   isterminal     noswallow       monitor */
+	{ "Gimp",       NULL,       NULL,                                  1 << 8,       1,           0,             0,              -1 },
+	{ "Firefox",    NULL,       NULL,                                  1 << 2,       0,           0,             0,               1 },
+	/* { "KeePassXC",  NULL,       NULL,                                  1 << 0,       0,           0,             0,               1 }, */
+	{ "discord",    NULL,       NULL,                                  1 << 3,       0,           0,             0,               1 },
+	{ "Anki",       NULL,       NULL,                                  1 << 5,       0,           0,             0,              -1 },
+	{ TERMCLASS,    NULL,       NULL,                                  0,            0,           1,             0,              -1 },
+	{ NULL,         NULL,       "Event Tester",                        0,            0,           0,             1,              -1 }, /* xev */
 };
 
 /* layout(s) */
@@ -100,24 +105,24 @@ static const char *termcmd[]  = { TERMINAL, NULL };
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
-		{ "color0",         STRING,  &normbgcolor },
-		{ "color0",         STRING,  &normbordercolor },
-		{ "color4",         STRING,  &normfgcolor },
-		{ "color4",         STRING,  &selbgcolor },
-		{ "color8",         STRING,  &selbordercolor },
-		{ "color0",         STRING,  &selfgcolor },
-		{ "borderpx",       INTEGER, &borderpx },
-		{ "snap",           INTEGER, &snap },
-		{ "showbar",        INTEGER, &showbar },
-		{ "topbar",         INTEGER, &topbar },
-		{ "nmaster",        INTEGER, &nmaster },
-		{ "resizehints",    INTEGER, &resizehints },
-		{ "mfact",          FLOAT,   &mfact },
-		{ "gappih",         INTEGER, &gappih },
-		{ "gappiv",         INTEGER, &gappiv },
-		{ "gappoh",         INTEGER, &gappoh },
-		{ "gappov",         INTEGER, &gappov },
-		{ "smartgaps",      INTEGER, &smartgaps },
+	{ "color0",         STRING,  &normbgcolor },
+	{ "color0",         STRING,  &normbordercolor },
+	{ "color4",         STRING,  &normfgcolor },
+	{ "color4",         STRING,  &selbgcolor },
+	{ "color8",         STRING,  &selbordercolor },
+	{ "color0",         STRING,  &selfgcolor },
+	{ "borderpx",       INTEGER, &borderpx },
+	{ "snap",           INTEGER, &snap },
+	{ "showbar",        INTEGER, &showbar },
+	{ "topbar",         INTEGER, &topbar },
+	{ "nmaster",        INTEGER, &nmaster },
+	{ "resizehints",    INTEGER, &resizehints },
+	{ "mfact",          FLOAT,   &mfact },
+	{ "gappih",         INTEGER, &gappih },
+	{ "gappiv",         INTEGER, &gappiv },
+	{ "gappoh",         INTEGER, &gappoh },
+	{ "gappov",         INTEGER, &gappov },
+	{ "smartgaps",      INTEGER, &smartgaps },
 };
 
 /* TODO: multimedia keys */
@@ -125,9 +130,9 @@ ResourcePref resources[] = {
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	/* navigation */
 	{ MODKEY,                       XK_space,  spawn,          SHCMD("dmenu_run") },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      spawn,          SHCMD("$BROWSER") },
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 	STACKKEYS(MODKEY,                          focusstack)
 	STACKKEYS(MODKEY|ShiftMask,                pushstack)
@@ -171,12 +176,23 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
-	/* power-ish */
+	/* programs */
+	{ MODKEY,                       XK_b,      spawn,          SHCMD("$BROWSER") },
+#ifdef GUI_EDITOR
+	{ MODKEY,                       XK_e,      spawn,          SHCMD("$EDITOR") },
+#else
+	{ MODKEY,                       XK_e,      spawn,          SHCMD(TERMINAL " -e \"$EDITOR\"") },
+#endif
+	{ MODKEY,                       XK_p,      spawn,          SHCMD(TERMINAL " -e pulsemixer") },
+	{ MODKEY,                       XK_Print,  spawn,          SHCMD("maimpick") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("maimpick sc") },
+
+	/* system actions */
 	{ MODKEY,                       XK_Escape, spawn,          SHCMD("sysact") },                           /* run sysact */
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("sysact -p \"Quit?\" dwmq") },         /* quit dwm */
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("sysact -p \"Reload?\" dwmr") },       /* reload dwm (SIGHUP) */
-	{ MODKEY|Mod1Mask|ShiftMask,    XK_q,      spawn,          SHCMD("sysact -p \"Shutdown?\" shutdown") }, /* shutdown */
-	{ MODKEY|Mod1Mask|ShiftMask,    XK_r,      spawn,          SHCMD("sysact -p \"Reboot?\" reboot") },     /* reboot */
+	{ MODKEY|ShiftMask|ControlMask, XK_q,      spawn,          SHCMD("sysact -p \"Shutdown?\" shutdown") }, /* shutdown */
+	{ MODKEY|ShiftMask|ControlMask, XK_r,      spawn,          SHCMD("sysact -p \"Reboot?\" reboot") },     /* reboot */
 };
 
 /* button definitions */
@@ -192,8 +208,13 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button5,        sigdwmblocks,   {.i = 5} },
 	{ ClkStatusText,        ShiftMask,      Button1,        sigdwmblocks,   {.i = 6} },
 #endif /* __OpenBSD */
+#ifdef GUI_EDITOR
+	{ ClkStatusText,        ShiftMask,      Button3,        spawn,          SHCMD("\"$EDITOR\" ~/.local/src/dwmblocks/blocks.h") },
+	{ ClkWinTitle,          ShiftMask,      Button3,        spawn,          SHCMD("\"$EDITOR\" ~/.local/src/dwm/config.h") },
+#else
 	{ ClkStatusText,        ShiftMask,      Button3,        spawn,          SHCMD(TERMINAL " -e \"$EDITOR\" ~/.local/src/dwmblocks/blocks.h") },
 	{ ClkWinTitle,          ShiftMask,      Button3,        spawn,          SHCMD(TERMINAL " -e \"$EDITOR\" ~/.local/src/dwm/config.h") },
+#endif
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        defaultgaps,    {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
@@ -204,4 +225,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
