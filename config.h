@@ -212,8 +212,8 @@ static Key keys[] = {
 	{ 0, XF86XK_DOS,                spawn,     SHCMD(TERMINAL) },
 	{ 0, XF86XK_TaskPane,           spawn,     SHCMD(TERMINAL " -e htop") },
 	{ 0, XF86XK_MyComputer,         spawn,     SHCMD(TERMINAL " -e lf /") },
-	{ 0, XF86XK_MonBrightnessUp,    spawn,     SHCMD("light -A 5; pkill -RTMIN+25 dwmblocks") },
-	{ 0, XF86XK_MonBrightnessDown,  spawn,     SHCMD("light -U 5; pkill -RTMIN+25 dwmblocks") },
+	{ 0, XF86XK_MonBrightnessUp,    spawn,     SHCMD("light -A 2; pkill -RTMIN+25 dwmblocks") },
+	{ 0, XF86XK_MonBrightnessDown,  spawn,     SHCMD("light -U 2; pkill -RTMIN+25 dwmblocks") },
 };
 
 /* button definitions */
