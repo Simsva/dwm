@@ -125,8 +125,7 @@ ResourcePref resources[] = {
 	{ "smartgaps",      INTEGER, &smartgaps },
 };
 
-/* TODO: multimedia keys */
-/* #include <X11/XF86keysym.h> */
+#include <X11/XF86keysym.h>
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -193,6 +192,28 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_r,      spawn,          SHCMD("sysact -p \"Reload?\" dwmr") },       /* reload dwm (SIGHUP) */
 	{ MODKEY|ShiftMask|ControlMask, XK_q,      spawn,          SHCMD("sysact -p \"Shutdown?\" shutdown") }, /* shutdown */
 	{ MODKEY|ShiftMask|ControlMask, XK_r,      spawn,          SHCMD("sysact -p \"Reboot?\" reboot") },     /* reboot */
+
+	/* multimedia */
+	{ 0, XF86XK_AudioMute,          spawn,     SHCMD("pamixer -t; pkill -RTMIN+6 dwmblocks") },
+	{ 0, XF86XK_AudioRaiseVolume,   spawn,     SHCMD("pamixer --allow-boost -i 3; pkill -RTMIN+6 dwmblocks") },
+	{ 0, XF86XK_AudioLowerVolume,   spawn,     SHCMD("pamixer --allow-boost -d 3; pkill -RTMIN+6 dwmblocks") },
+	{ 0, XF86XK_AudioPrev,          spawn,     SHCMD("mpc prev") },
+	{ 0, XF86XK_AudioNext,          spawn,     SHCMD("mpc next") },
+	{ 0, XF86XK_AudioPause,         spawn,     SHCMD("mpc pause") },
+	{ 0, XF86XK_AudioPlay,          spawn,     SHCMD("mpc toggle") },
+	{ 0, XF86XK_AudioStop,          spawn,     SHCMD("mpc toggle") },
+	{ 0, XF86XK_AudioRewind,        spawn,     SHCMD("mpc seek -10") },
+	{ 0, XF86XK_AudioForward,       spawn,     SHCMD("mpc seek +10") },
+	{ 0, XF86XK_AudioMedia,         spawn,     SHCMD(TERMINAL " -e ncmpcpp") },
+	{ 0, XF86XK_AudioMicMute,       spawn,     SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
+	{ 0, XF86XK_PowerOff,           spawn,     SHCMD("sysact") },
+	{ 0, XF86XK_Calculator,         spawn,     SHCMD(TERMINAL " -e python") },
+	{ 0, XF86XK_WWW,                spawn,     SHCMD("$BROWSER") },
+	{ 0, XF86XK_DOS,                spawn,     SHCMD(TERMINAL) },
+	{ 0, XF86XK_TaskPane,           spawn,     SHCMD(TERMINAL " -e htop") },
+	{ 0, XF86XK_MyComputer,         spawn,     SHCMD(TERMINAL " -e lf /") },
+	{ 0, XF86XK_MonBrightnessUp,    spawn,     SHCMD("light -A 5; pkill -RTMIN+25 dwmblocks") },
+	{ 0, XF86XK_MonBrightnessDown,  spawn,     SHCMD("light -U 5; pkill -RTMIN+25 dwmblocks") },
 };
 
 /* button definitions */
